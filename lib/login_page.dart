@@ -1,50 +1,16 @@
+import 'package:at_a_glance/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:at_a_glance/home_page.dart';
 import 'package:flutter/material.dart';
-import 'splash_screen.dart';
-import 'login_page.dart';
+import 'home_page.dart';
 
-Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  runApp(const MyApp());
-}
-
-final navigatorKey = GlobalKey<NavigatorState>();
-
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
-      routes: {
-        "login": (context) => const LoginPage(),
-        "signup": (context) => const TitlePage(),
-        "home": (context) => const HomePage(),
-      },
-    );
-  }
-}
-
-class TitlePage extends StatefulWidget {
-  const TitlePage({super.key});
-
-  @override
-  State<TitlePage> createState() => _TitlePageState();
-}
-
-class _TitlePageState extends State<TitlePage> {
+class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -63,7 +29,7 @@ class _TitlePageState extends State<TitlePage> {
       body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("images/Starting_page_1.png"),
+              image: AssetImage("images/Starting_page_2.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -125,7 +91,7 @@ class _TitlePageState extends State<TitlePage> {
                                   color: Colors.orange,
                                 ),
                                 Text(
-                                  "\t\t\tSignUp with Email",
+                                  "\t\t\tLogin with Email",
                                   style: TextStyle(
                                     fontSize: 16,
                                   ),
@@ -159,7 +125,7 @@ class _TitlePageState extends State<TitlePage> {
                                   color: Colors.blue,
                                 ),
                                 Text(
-                                  "\t\t\tCreate Password",
+                                  "\t\t\tEnter Password",
                                   style: TextStyle(
                                     fontSize: 16,
                                   ),
@@ -194,10 +160,10 @@ class _TitlePageState extends State<TitlePage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,
                                 ),
-                                onPressed: () {
-                                  signUp();
+                                onPressed: () async {
+                                  logIn();
                                 },
-                                child: const Text("SignUp"),
+                                child: const Text("Login"),
                               ),
                             ),
                           ),
@@ -239,7 +205,7 @@ class _TitlePageState extends State<TitlePage> {
                             flex: 1,
                             fit: FlexFit.loose,
                             child: Text(
-                              "Already have an account?",
+                              "Don't have an account?",
                               style: TextStyle(
                                 fontWeight: FontWeight.w200,
                               ),
@@ -254,7 +220,7 @@ class _TitlePageState extends State<TitlePage> {
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.pushReplacementNamed(
-                                    context, "login");
+                                    context, "signup");
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
@@ -262,7 +228,7 @@ class _TitlePageState extends State<TitlePage> {
                                 elevation: 0,
                               ),
                               child: const Text(
-                                "LogIn",
+                                "SignUp",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -280,9 +246,9 @@ class _TitlePageState extends State<TitlePage> {
     );
   }
 
-  Future signUp() async {
+  Future logIn() async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
@@ -295,7 +261,7 @@ class _TitlePageState extends State<TitlePage> {
       Navigator.pushReplacementNamed(context, "home");
     } else {
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, "signup");
+      Navigator.pushReplacementNamed(context, "login");
     }
   }
 }

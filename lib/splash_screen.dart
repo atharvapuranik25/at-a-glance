@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:at_a_glance/home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 
@@ -20,7 +22,17 @@ class SplashScreenState extends State<SplashScreen> {
       () => Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const TitlePage(),
+          builder: (context) => Scaffold(
+            body: StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return const HomePage();
+                  } else {
+                    return const TitlePage();
+                  }
+                }),
+          ),
         ),
       ),
     );

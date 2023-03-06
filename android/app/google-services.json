@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "101459719225",
+    "project_id": "at-a-glance-b8c7e",
+    "storage_bucket": "at-a-glance-b8c7e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101459719225:android:bb44a5b4053f2521a4c9e8",
+        "android_client_info": {
+          "package_name": "com.example.at_a_glance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "101459719225-lqfhvo3sud8uiqnm6l12hlr9eoe4r23h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNJ_DVzX11Hoob0Qz8aOYlVJcZfwKu3Vk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "101459719225-lqfhvo3sud8uiqnm6l12hlr9eoe4r23h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "101459719225-h2f82a1mtojnquvajlpa03v90na8oj1j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.atAGlance"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
