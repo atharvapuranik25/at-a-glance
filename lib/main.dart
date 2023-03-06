@@ -1,6 +1,6 @@
+import 'package:at_a_glance/home_page.dart';
 import 'package:flutter/material.dart';
 import 'splash_screen.dart';
-import 'home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,135 +35,215 @@ class _TitlePageState extends State<TitlePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/Starting_page_1.png"),
-            fit: BoxFit.cover,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("images/Starting_page_1.png"),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            children: [
-              Container(
-                //figure out padding later
-                padding: const EdgeInsets.all(90),
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: const TextSpan(
-                      text: "Indore",
-                      style: TextStyle(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: "\nAt A Glance",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w200,
-                            ))
-                      ]),
-                ),
-              ),
-              Container(
-                //fix the contant size to make it responsive
-                padding: const EdgeInsets.all(30),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(30),
-                  ),
-                ),
-                height: 550,
-                width: 350,
-                child: Column(
-                  children: [
-                    Row(
-                      children: const [
-                        Icon(
-                          Icons.phone,
-                          size: 30,
-                          color: Colors.blue,
-                        ),
-                        Text(
-                          "SignUp with phone",
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Center(
+              child: Column(
+                children: [
+                  Flexible(
+                    //title
+                    flex: 1,
+                    fit: FlexFit.loose,
+                    child: Padding(
+                      padding: const EdgeInsets.all(50),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: const TextSpan(
+                          text: "Indore",
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
                           ),
-                        )
-                      ],
-                    ),
-                    const TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '+91',
-                      ),
-                    ),
-                    Row(
-                      children: const [
-                        Icon(
-                          Icons.mail,
-                          size: 30,
-                          color: Colors.blue,
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: "\nAt a Glance",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w200,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "SignUp with Email",
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        )
-                      ],
-                    ),
-                    const TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'johndoe@gmail.com',
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => const HomePage(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.black,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 120, vertical: 15),
-                      ),
-                      child: const Text("SignUp"),
-                    ),
-                    const Text("OR"),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.redAccent,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 80, vertical: 15),
-                      ),
-                      child: const Text("SignUp with Google"),
-                    ),
-                    const Text("Already Have an Account?"),
-                    const Text("LogIn"),
-                  ],
-                ),
-              ),
-              Container(
-                //change this later
-                height: 100,
-                child: const Center(
-                  child: Text(
-                    "Read Privacy Policy",
-                    style: TextStyle(color: Colors.white70),
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Flexible(
+                    //login/signup
+                    flex: 2,
+                    fit: FlexFit.loose,
+                    child: Container(
+                      padding: const EdgeInsets.all(30),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(30),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Flexible(
+                            child: Row(
+                              children: const [
+                                Icon(
+                                  Icons.phone,
+                                  size: 30,
+                                  color: Colors.blue,
+                                ),
+                                Text(
+                                  "\t\t\tSignUp with Phone",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Flexible(
+                            flex: 2,
+                            fit: FlexFit.loose,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: '+91',
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Flexible(
+                            child: Row(
+                              children: const [
+                                Icon(
+                                  Icons.mail,
+                                  size: 30,
+                                  color: Colors.orange,
+                                ),
+                                Text(
+                                  "\t\t\tSignUp with email",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Flexible(
+                            flex: 2,
+                            fit: FlexFit.loose,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'johndoe@gmail.com',
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Flexible(
+                            flex: 2,
+                            fit: FlexFit.loose,
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const HomePage(),
+                                    ),
+                                  );
+                                },
+                                child: const Text("SignUp"),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          const Flexible(
+                            flex: 1,
+                            fit: FlexFit.loose,
+                            child: Text(
+                              "OR",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Flexible(
+                            flex: 2,
+                            fit: FlexFit.loose,
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.redAccent,
+                                ),
+                                onPressed: () {},
+                                child: const Text("SignUp with Google"),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          const Flexible(
+                            flex: 1,
+                            fit: FlexFit.loose,
+                            child: Text(
+                              "Already have an account?",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w200,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          const Flexible(
+                            flex: 1,
+                            fit: FlexFit.loose,
+                            child: Text(
+                              "LogIn",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )),
     );
   }
 }
