@@ -140,29 +140,115 @@ class _HomePageState extends State<HomePage> {
               return Container(
                   padding: const EdgeInsets.all(20),
                   child: Column(
-                    children: const [
+                    children: [
+                      Flexible(
+                        flex: 10,
+                        fit: FlexFit.loose,
+                        child: Column(
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              fit: FlexFit.loose,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'What servies are you looking for',
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Flexible(
+                              flex: 1,
+                              fit: FlexFit.loose,
+                              child: Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFf1f1f1),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(14),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       Flexible(
                         flex: 1,
                         fit: FlexFit.loose,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'What servies are you looking for',
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                            ),
+                            onPressed: () {},
+                            child: const Text("Emergeny Services"),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      
+                      )
                     ],
                   ));
             } else if (currentIndex == 2) {
               //Search
-              return Container();
+              return Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    const Flexible(
+                      flex: 1,
+                      fit: FlexFit.loose,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Whats on your mind today?',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Flexible(
+                      flex: 1,
+                      fit: FlexFit.loose,
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFf1f1f1),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(14),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             } else if (currentIndex == 3) {
               //Profile
-              return Container();
+              return Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      fit: FlexFit.loose,
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFf1f1f1),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(14),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             } else {
               return Container();
             }
