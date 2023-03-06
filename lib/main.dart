@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'splash_screen.dart';
+import 'home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -120,7 +121,13 @@ class _TitlePageState extends State<TitlePage> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => const HomePage(),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.black,
                         padding: const EdgeInsets.symmetric(
@@ -133,8 +140,8 @@ class _TitlePageState extends State<TitlePage> {
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         primary: Colors.redAccent,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 80, vertical: 15),
                       ),
                       child: const Text("SignUp with Google"),
                     ),
