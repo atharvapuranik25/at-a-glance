@@ -1,7 +1,10 @@
+import 'package:at_a_glance/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:at_a_glance/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'splash_screen.dart';
 import 'login_page.dart';
 
@@ -24,15 +27,18 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
-      routes: {
-        "login": (context) => const LoginPage(),
-        "signup": (context) => const TitlePage(),
-        "home": (context) => const HomePage(),
-      },
+    return ChangeNotifierProvider(
+      create: (context) => GoogleSignInProvider(),
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen(),
+        routes: {
+          "login": (context) => const LoginPage(),
+          "signup": (context) => const TitlePage(),
+          "home": (context) => const HomePage(),
+        },
+      ),
     );
   }
 }
@@ -223,12 +229,18 @@ class _TitlePageState extends State<TitlePage> {
                             child: SizedBox(
                               width: double.infinity,
                               height: double.infinity,
-                              child: ElevatedButton(
+                              child: ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.redAccent,
                                 ),
-                                onPressed: () {},
-                                child: const Text("SignUp with Google"),
+                                onPressed: () {
+                                  glogin();
+                                },
+                                icon: const FaIcon(
+                                  FontAwesomeIcons.google,
+                                  color: Colors.white,
+                                ),
+                                label: const Text("SignUp with Google"),
                               ),
                             ),
                           ),
@@ -278,6 +290,22 @@ class _TitlePageState extends State<TitlePage> {
             ),
           )),
     );
+  }
+
+  Future glogin() async {
+    final provider = Provider.of<GoogleSignInProvider>(
+      context,
+      listen: false,
+    );
+    provider.googleLogin();
+
+    if (FirebaseAuth.instance.currentUser != null) {
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacementNamed(context, "home");
+    } else {
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacementNamed(context, "signup");
+    }
   }
 
   Future signUp() async {
