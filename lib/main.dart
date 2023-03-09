@@ -86,22 +86,39 @@ class _TitlePageState extends State<TitlePage> {
                       padding: const EdgeInsets.all(50),
                       child: RichText(
                         textAlign: TextAlign.center,
-                        text: const TextSpan(
-                          text: "Indore",
-                          style: TextStyle(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: "\nAt a Glance",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w200,
+                        text: SplashScreenState().currentCity != null
+                            ? TextSpan(
+                                text: SplashScreenState().currentAddress,
+                                style: const TextStyle(
+                                  fontSize: 50,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                children: const <TextSpan>[
+                                  TextSpan(
+                                    text: "\nAt a Glance",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const TextSpan(
+                                text: "Your City",
+                                style: TextStyle(
+                                  fontSize: 50,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "\nAt a Glance",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
                       ),
                     ),
                   ),
