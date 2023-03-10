@@ -1,6 +1,9 @@
 import 'package:at_a_glance/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +14,52 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 1;
+  late Position _currentPosition;
+  String? _currentAddress;
+  String? _currentCity;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+
+  _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: "Please switch on your location");
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: "Location Permission Denied");
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(msg: "Permission Denied Forever");
+    }
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentPosition = position;
+        _currentCity = "${place.locality}";
+        _currentAddress =
+            "${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}";
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +71,49 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: RichText(
-          textAlign: TextAlign.start,
-          text: const TextSpan(
-              text: "Indore",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+        title: _currentCity != null
+            ? RichText(
+                textAlign: TextAlign.start,
+                text: TextSpan(
+                  text: _currentCity,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  children: const <TextSpan>[
+                    TextSpan(
+                      text: "\nAt A Glance",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w200,
+                        color: Colors.black,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            : RichText(
+                textAlign: TextAlign.start,
+                text: const TextSpan(
+                  text: "Your City",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: "\nAt A Glance",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w200,
+                        color: Colors.black,
+                      ),
+                    )
+                  ],
+                ),
               ),
-              children: <TextSpan>[
-                TextSpan(
-                    text: "\nAt A Glance",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w200,
-                      color: Colors.black,
-                    ))
-              ]),
-        ),
         actions: <Widget>[
           IconButton(
               onPressed: () {},
