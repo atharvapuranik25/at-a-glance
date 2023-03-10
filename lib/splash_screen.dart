@@ -1,26 +1,33 @@
 import 'dart:async';
-import 'package:at_a_glance/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'main.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:splashscreen/splashscreen.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+import 'home_page.dart';
+import 'main.dart';
+
+class SplashScreenPage extends StatefulWidget {
+  const SplashScreenPage({super.key});
 
   @override
-  SplashScreenState createState() => SplashScreenState();
+  SplashScreenPageState createState() => SplashScreenPageState();
 }
 
-class SplashScreenState extends State<SplashScreen> {
-  int time = 5;
-  String currentCity = "My_City";
-  String currentAddress = "My Address";
+class SplashScreenPageState extends State<SplashScreenPage> {
   late Position currentPosition;
+  late String currentAddress;
+  late String currentCity = "My City";
 
-  Future determinePosition() async {
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition();
+  }
+
+  Future _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -57,12 +64,20 @@ class SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  Future authCheck() async {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        Navigator.pushReplacementNamed(context, "signup");
+      } else {
+        Navigator.pushReplacementNamed(context, "home");
+      }
+    });
+  }
+
   @override
-  void initState() {
-    super.initState();
-    determinePosition();
+  Widget build(BuildContext context) {
     Timer(
-      Duration(seconds: time),
+      const Duration(seconds: 5),
       () => Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -73,20 +88,60 @@ class SplashScreenState extends State<SplashScreen> {
                   if (snapshot.hasData) {
                     return const HomePage();
                   } else {
-                    return const TitlePage();
+                    return TitlePage(currentCity);
                   }
                 }),
           ),
         ),
       ),
     );
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: FlutterLogo(size: MediaQuery.of(context).size.height),
+    var assetsImage = const AssetImage(
+        'images/flutter_logo.png'); //<- Creates an object that fetches an image.
+    var image = Image(
+        image: assetsImage,
+        height: 300); //<- Creates a widget that displays an image.
+
+    return MaterialApp(
+      home: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(color: Colors.white),
+          child: Center(
+            child: Column(
+              children: [Text(currentCity), image],
+            ),
+          ),
+        ),
+      ),
     );
+    // return SplashScreen(
+    //   seconds: 10,
+    //   navigateAfterSeconds: authCheck(),
+    //   // Navigator.pushReplacement(
+    //   //   context,
+    //   //   MaterialPageRoute(
+    //   //     builder: (context) => Scaffold(
+    //   //       body: StreamBuilder<User?>(
+    //   //           stream: FirebaseAuth.instance.authStateChanges(),
+    //   //           builder: (context, snapshot) {
+    //   //             if (snapshot.hasData) {
+    //   //               return const HomePage();
+    //   //             } else {
+    //   //               return const TitlePage();
+    //   //             }
+    //   //           }),
+    //   //     ),
+    //   //   ),
+    //   // ),
+    //   title: const Text(
+    //     'At a Glance',
+    //     textScaleFactor: 2,
+    //   ),
+    //   image: Image.network(
+    //       'https://storage.googleapis.com/cms-storage-bucket/847ae81f5430402216fd.svg'),
+    //   loadingText: Text(currentCity),
+    //   photoSize: 100.0,
+    //   loaderColor: Colors.blue,
+    // );
   }
 }

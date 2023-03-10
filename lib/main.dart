@@ -32,10 +32,10 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
-        home: const SplashScreen(),
+        home: const SplashScreenPage(),
         routes: {
           "login": (context) => const LoginPage(),
-          "signup": (context) => const TitlePage(),
+          "signup": (context) => TitlePage("Indore"),
           "home": (context) => const HomePage(),
         },
       ),
@@ -44,15 +44,21 @@ class _MyAppState extends State<MyApp> {
 }
 
 class TitlePage extends StatefulWidget {
-  const TitlePage({super.key});
+  String currentCity;
+  TitlePage(this.currentCity, {super.key});
 
   @override
-  State<TitlePage> createState() => _TitlePageState();
+  State<TitlePage> createState() {
+    return TitlePageState(this.currentCity);
+  }
 }
 
-class _TitlePageState extends State<TitlePage> {
+class TitlePageState extends State<TitlePage> {
+  String currentCity;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  TitlePageState(this.currentCity);
 
   @override
   void dispose() {
@@ -86,9 +92,9 @@ class _TitlePageState extends State<TitlePage> {
                       padding: const EdgeInsets.all(50),
                       child: RichText(
                         textAlign: TextAlign.center,
-                        text: SplashScreenState().currentCity != "My_City"
+                        text: currentCity != "My City"
                             ? TextSpan(
-                                text: SplashScreenState().currentCity,
+                                text: currentCity,
                                 style: const TextStyle(
                                   fontSize: 50,
                                   fontWeight: FontWeight.bold,
