@@ -86,9 +86,9 @@ class _TitlePageState extends State<TitlePage> {
                       padding: const EdgeInsets.all(50),
                       child: RichText(
                         textAlign: TextAlign.center,
-                        text: SplashScreenState().currentCity != null
+                        text: SplashScreenState().currentCity != "My_City"
                             ? TextSpan(
-                                text: SplashScreenState().currentAddress,
+                                text: SplashScreenState().currentCity,
                                 style: const TextStyle(
                                   fontSize: 50,
                                   fontWeight: FontWeight.bold,

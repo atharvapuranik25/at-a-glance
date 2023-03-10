@@ -16,7 +16,7 @@ class SplashScreen extends StatefulWidget {
 
 class SplashScreenState extends State<SplashScreen> {
   int time = 5;
-  String currentCity = 'My City';
+  String currentCity = "My_City";
   String currentAddress = "My Address";
   late Position currentPosition;
 
@@ -60,6 +60,7 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    determinePosition();
     Timer(
       Duration(seconds: time),
       () => Navigator.pushReplacement(
@@ -70,10 +71,8 @@ class SplashScreenState extends State<SplashScreen> {
                 stream: FirebaseAuth.instance.authStateChanges(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    determinePosition();
                     return const HomePage();
                   } else {
-                    determinePosition();
                     return const TitlePage();
                   }
                 }),
