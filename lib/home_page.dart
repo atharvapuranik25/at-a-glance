@@ -116,11 +116,12 @@ class _HomePageState extends State<HomePage> {
               ),
         actions: <Widget>[
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.chat_rounded,
-                color: Colors.black,
-              ))
+            onPressed: () {},
+            icon: const Icon(
+              Icons.chat_rounded,
+              color: Colors.black,
+            ),
+          )
         ],
       ),
       body: SafeArea(
@@ -311,34 +312,88 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Flexible(
-                      flex: 1,
-                      fit: FlexFit.loose,
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFf1f1f1),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(14),
-                          ),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFf1f1f1),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(14),
                         ),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(user.email!),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.redAccent,
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text("User Profile"),
+                                    Text("Edit or view your data"),
+                                  ],
                                 ),
-                                onPressed: () {
-                                  signOut();
-                                },
-                                child: const Text("LogOut"),
+                                const Icon(
+                                  Icons.edit,
+                                  color: Colors.black,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: const BoxDecoration(
+                                color: Colors.orangeAccent,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(100),
+                                ),
                               ),
-                            ],
-                          ),
+                              child: Row(
+                                children: [
+                                  const CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage:
+                                        AssetImage('images/Starting_page.png'),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("John Doe"),
+                                      Text(user.email!),
+                                      const Text("+91 9977606958"),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blueGrey,
+                              ),
+                              onPressed: () {},
+                              child: const Text("+ Add Service"),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.redAccent,
+                              ),
+                              onPressed: () {
+                                signOut();
+                              },
+                              child: const Text("LogOut"),
+                            ),
+                          ],
                         ),
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:at_a_glance/google_sign_in.dart';
+import 'package:at_a_glance/user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:at_a_glance/home_page.dart';
@@ -37,6 +38,7 @@ class _MyAppState extends State<MyApp> {
           "login": (context) => const LoginPage(),
           "signup": (context) => const TitlePage(),
           "home": (context) => const HomePage(),
+          "addData": (context) => const UserData(),
         },
       ),
     );
@@ -108,7 +110,7 @@ class _TitlePageState extends State<TitlePage> {
                         ),
                       ),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Flexible(
                             child: Row(
@@ -289,7 +291,7 @@ class _TitlePageState extends State<TitlePage> {
 
     if (FirebaseAuth.instance.currentUser != null) {
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, "home");
+      Navigator.pushReplacementNamed(context, "addData");
     } else {
       // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, "signup");
@@ -308,7 +310,7 @@ class _TitlePageState extends State<TitlePage> {
 
     if (FirebaseAuth.instance.currentUser != null) {
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, "home");
+      Navigator.pushReplacementNamed(context, "addData");
     } else {
       // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, "signup");
