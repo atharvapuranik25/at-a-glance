@@ -217,9 +217,13 @@ class _UserDataState extends State<UserData> {
                                 imagesRef.child(user.uid);
 
                             try {
-                              await profileImageRef.putFile(File(file!.path));
+                              await profileImageRef.putFile(File(file.path));
                               imageURL = await profileImageRef.getDownloadURL();
-                            } catch (e) {}
+                            } catch (e) {
+                              if (kDebugMode) {
+                                print(e);
+                              }
+                            }
                           },
                         ),
                         const SizedBox(

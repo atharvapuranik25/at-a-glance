@@ -45,6 +45,7 @@ dependencies:
 
   geolocator: ^9.0.2
   geocoding: ^2.0.5
+  flutter_osm_plugin: ^0.51.0
 
   fluttertoast: ^8.2.1
 

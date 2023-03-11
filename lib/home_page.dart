@@ -100,6 +100,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
@@ -417,6 +418,9 @@ class _HomePageState extends State<HomePage> {
                               ),
                               onPressed: () {},
                               child: const Text("+ Add Service"),
+                            ),
+                            const SizedBox(
+                              height: 20,
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
