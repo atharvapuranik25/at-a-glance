@@ -3,6 +3,7 @@ import 'package:at_a_glance/user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:at_a_glance/home_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -305,7 +306,9 @@ class _TitlePageState extends State<TitlePage> {
         password: passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
 
     if (FirebaseAuth.instance.currentUser != null) {

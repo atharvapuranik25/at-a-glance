@@ -1,5 +1,7 @@
 import 'package:at_a_glance/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
@@ -17,6 +19,11 @@ class _HomePageState extends State<HomePage> {
   late Position _currentPosition;
   String? _currentAddress;
   String? _currentCity;
+  late String name;
+  late String phone;
+  late String image;
+
+  FirebaseDatabase database = FirebaseDatabase.instance;
 
   @override
   void initState() {
@@ -57,13 +64,39 @@ class _HomePageState extends State<HomePage> {
             "${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}";
       });
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference nameref =
+        FirebaseDatabase.instance.ref("users/${user.uid}/name");
+    nameref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        name = data.toString();
+      });
+    });
+    DatabaseReference phnoref =
+        FirebaseDatabase.instance.ref("users/${user.uid}/phone");
+    phnoref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        phone = data.toString();
+      });
+    });
+    DatabaseReference imgref =
+        FirebaseDatabase.instance.ref("users/${user.uid}/image");
+    imgref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        image = data.toString();
+      });
+    });
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -354,10 +387,9 @@ class _HomePageState extends State<HomePage> {
                               ),
                               child: Row(
                                 children: [
-                                  const CircleAvatar(
+                                  CircleAvatar(
                                     radius: 50,
-                                    backgroundImage:
-                                        AssetImage('images/Starting_page.png'),
+                                    backgroundImage: NetworkImage(image),
                                   ),
                                   const SizedBox(
                                     width: 10,
@@ -366,9 +398,11 @@ class _HomePageState extends State<HomePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text("John Doe"),
+                                      Text(
+                                        name,
+                                      ),
                                       Text(user.email!),
-                                      const Text("+91 9977606958"),
+                                      Text(phone),
                                     ],
                                   ),
                                 ],

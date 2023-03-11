@@ -1,5 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UserData extends StatefulWidget {
   const UserData({super.key});
@@ -10,6 +17,54 @@ class UserData extends StatefulWidget {
 
 class _UserDataState extends State<UserData> {
   final user = FirebaseAuth.instance.currentUser!;
+  FirebaseDatabase database = FirebaseDatabase.instance;
+  final storage = FirebaseStorage.instance;
+
+  final nameController = TextEditingController();
+  final phnoController = TextEditingController();
+
+  String imageURL = '';
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phnoController.dispose();
+
+    super.dispose();
+  }
+
+  Future addUserData() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("users");
+
+    if (imageURL.isEmpty) {
+      Fluttertoast.showToast(msg: "Please upload an image");
+      return;
+    }
+
+    try {
+      await ref.set({
+        user.uid: {
+          "name": nameController.text.trim(),
+          "email": user.email,
+          "phone": phnoController.text.trim(),
+          "image": imageURL
+        }
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+
+    final snapshot = await ref.child(user.uid).get();
+    if (snapshot.exists) {
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacementNamed(context, "home");
+    } else {
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacementNamed(context, "addData");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +124,12 @@ class _UserDataState extends State<UserData> {
                         const SizedBox(
                           height: 20,
                         ),
-                        const Flexible(
+                        Flexible(
                           flex: 2,
                           fit: FlexFit.loose,
                           child: TextField(
-                            decoration: InputDecoration(
+                            controller: nameController,
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Enter Name',
                             ),
@@ -100,7 +156,7 @@ class _UserDataState extends State<UserData> {
                             enabled: false,
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
-                              hintText: user.email!,
+                              hintText: user.email,
                             ),
                           ),
                         ),
@@ -118,15 +174,53 @@ class _UserDataState extends State<UserData> {
                         const SizedBox(
                           height: 20,
                         ),
-                        const Flexible(
+                        Flexible(
                           flex: 2,
                           fit: FlexFit.loose,
                           child: TextField(
-                            decoration: InputDecoration(
+                            controller: phnoController,
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Enter Phone Number',
                             ),
                           ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Flexible(
+                          child: Text(
+                            "Pick a Profile Picture",
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.image),
+                          iconSize: 30,
+                          onPressed: () async {
+                            ImagePicker imagePicker = ImagePicker();
+                            XFile? file = await imagePicker.pickImage(
+                                source: ImageSource.gallery);
+
+                            if (file == null) return;
+
+                            Reference storageRef =
+                                FirebaseStorage.instance.ref();
+                            Reference imagesRef = storageRef.child("users");
+
+                            Reference profileImageRef =
+                                imagesRef.child(user.uid);
+
+                            try {
+                              await profileImageRef.putFile(File(file!.path));
+                              imageURL = await profileImageRef.getDownloadURL();
+                            } catch (e) {}
+                          },
                         ),
                         const SizedBox(
                           height: 40,
@@ -142,7 +236,7 @@ class _UserDataState extends State<UserData> {
                                 backgroundColor: Colors.green,
                               ),
                               onPressed: () {
-                                Navigator.pushReplacementNamed(context, "home");
+                                addUserData();
                               },
                               child: const Text(
                                 "Save",

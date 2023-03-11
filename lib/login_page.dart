@@ -1,5 +1,6 @@
 import 'package:at_a_glance/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -267,7 +268,9 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
 
     if (FirebaseAuth.instance.currentUser != null) {
