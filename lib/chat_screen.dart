@@ -117,7 +117,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("ChatGPT & Dall-E2 Demo")),
+        appBar: AppBar(title: const Text("ChatGPT & DALL-E2 Assistance")),
         body: SafeArea(
           child: Column(
             children: [

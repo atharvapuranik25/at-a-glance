@@ -4,13 +4,12 @@ import 'package:at_a_glance/chat_screen.dart';
 import 'package:at_a_glance/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
 import 'add_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -50,6 +49,56 @@ class _HomePageState extends State<HomePage> {
   late String windType;
 
   FirebaseDatabase database = FirebaseDatabase.instance;
+
+  Query elecRef =
+      FirebaseDatabase.instance.ref().child('services').child('Electrician');
+  Query plumbRef =
+      FirebaseDatabase.instance.ref().child('services').child('Plumber');
+  Query mechRef =
+      FirebaseDatabase.instance.ref().child('services').child('Mechanic');
+
+  DatabaseReference electricianref =
+      FirebaseDatabase.instance.ref().child('services').child('Electrician');
+  DatabaseReference plumberref =
+      FirebaseDatabase.instance.ref().child('services').child('Plumber');
+  DatabaseReference mechanicref =
+      FirebaseDatabase.instance.ref().child('services').child('Mechanic');
+
+  Widget listItem({required Map service}) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        //show service
+        padding: const EdgeInsets.all(15),
+        decoration: const BoxDecoration(
+          color: Colors.orangeAccent,
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage(service['image']),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(service['name']),
+                Text(service['address']),
+                Text(service['phone']),
+                const Text("5km away"),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -523,6 +572,18 @@ class _HomePageState extends State<HomePage> {
                             Radius.circular(30),
                           ),
                         ),
+                        child: FirebaseAnimatedList(
+                          query: mechRef,
+                          itemBuilder: (BuildContext context,
+                              DataSnapshot snapshot,
+                              Animation<double> animation,
+                              int index) {
+                            Map mechanic = snapshot.value as Map;
+                            mechanic['key'] = snapshot.key;
+
+                            return listItem(service: mechanic);
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -531,60 +592,63 @@ class _HomePageState extends State<HomePage> {
             } else if (currentIndex == 0) {
               //Services
               return Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      Flexible(
-                        flex: 10,
-                        fit: FlexFit.loose,
-                        child: Column(
-                          children: [
-                            const Flexible(
-                              flex: 1,
-                              fit: FlexFit.loose,
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'What servies are you looking for',
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Flexible(
-                              flex: 1,
-                              fit: FlexFit.loose,
-                              child: Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFFf1f1f1),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(14),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        fit: FlexFit.loose,
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.redAccent,
-                            ),
-                            onPressed: () {},
-                            child: const Text("Emergeny Services"),
-                          ),
-                        ),
-                      )
-                    ],
-                  ));
+                height: double.infinity,
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                child: FirebaseAnimatedList(
+                  query: elecRef,
+                  itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                      Animation<double> animation, int index) {
+                    Map electrician = snapshot.value as Map;
+                    electrician['key'] = snapshot.key;
+
+                    return listItem(service: electrician);
+                  },
+                ),
+
+                // Column(
+                //   children: [
+                //     const TextField(
+                //       decoration: InputDecoration(
+                //         border: OutlineInputBorder(),
+                //         hintText: 'What servies are you looking for',
+                //       ),
+                //     ),
+                //     const SizedBox(
+                //       height: 10,
+                //     ),
+                //     Container(
+                //       constraints: const BoxConstraints.expand(),
+                //       padding: const EdgeInsets.all(20),
+                //       decoration: const BoxDecoration(
+                //         color: Color(0xFFf1f1f1),
+                //         borderRadius: BorderRadius.all(
+                //           Radius.circular(14),
+                //         ),
+                //       ),
+                //       child: FirebaseAnimatedList(
+                //         query: elecRef,
+                //         itemBuilder: (BuildContext context,
+                //             DataSnapshot snapshot,
+                //             Animation<double> animation,
+                //             int index) {
+                //           Map electrician = snapshot.value as Map;
+                //           electrician['key'] = snapshot.key;
+
+                //           return listItem(service: electrician);
+                //         },
+                //       ),
+                //     ),
+                //     // ElevatedButton(
+                //     //   style: ElevatedButton.styleFrom(
+                //     //     backgroundColor: Colors.redAccent,
+                //     //   ),
+                //     //   onPressed: () {},
+                //     //   child: const Text("Emergeny Services"),
+                //     // ),
+                //   ],
+                // ),
+              );
             } else if (currentIndex == 2) {
               //Search
               return Container(

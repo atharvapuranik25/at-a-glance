@@ -31,7 +31,9 @@ class _AddServiceState extends State<AddService> {
   final addressController = TextEditingController();
   final phnoController = TextEditingController();
 
+  // ignore: prefer_typing_uninitialized_variables
   late final lattitude;
+  // ignore: prefer_typing_uninitialized_variables
   late final longitude;
 
   String imageURL = '';
@@ -47,7 +49,7 @@ class _AddServiceState extends State<AddService> {
 
   Future addUserService() async {
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref("services/$dropdownValue");
+        FirebaseDatabase.instance.ref("services/$dropdownValue/${user.uid}");
     DatabaseReference userref = FirebaseDatabase.instance.ref("users");
 
     if (imageURL.isEmpty) {
@@ -57,15 +59,13 @@ class _AddServiceState extends State<AddService> {
 
     try {
       await ref.set({
-        user.uid: {
-          "name": nameController.text.trim(),
-          "email": user.email,
-          "phone": phnoController.text.trim(),
-          "address": addressController.text.trim(),
-          "lattitude": lattitude,
-          "longitude": longitude,
-          "image": imageURL,
-        }
+        "name": nameController.text.trim(),
+        "email": user.email,
+        "phone": phnoController.text.trim(),
+        "address": addressController.text.trim(),
+        "lattitude": lattitude,
+        "longitude": longitude,
+        "image": imageURL,
       });
       await userref.update({"${user.uid}/service": true});
       await userref.update({"${user.uid}/serice_type": dropdownValue});

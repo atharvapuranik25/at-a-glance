@@ -34,7 +34,7 @@ class _UserDataState extends State<UserData> {
   }
 
   Future addUserData() async {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("users");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("users/${user.uid}");
 
     if (imageURL.isEmpty) {
       Fluttertoast.showToast(msg: "Please upload an image");
@@ -43,14 +43,12 @@ class _UserDataState extends State<UserData> {
 
     try {
       await ref.set({
-        user.uid: {
-          "name": nameController.text.trim(),
-          "email": user.email,
-          "phone": phnoController.text.trim(),
-          "image": imageURL,
-          "service": false,
-          "service_type": null
-        }
+        "name": nameController.text.trim(),
+        "email": user.email,
+        "phone": phnoController.text.trim(),
+        "image": imageURL,
+        "service": false,
+        "service_type": null
       });
     } catch (e) {
       if (kDebugMode) {
@@ -58,7 +56,7 @@ class _UserDataState extends State<UserData> {
       }
     }
 
-    final snapshot = await ref.child(user.uid).get();
+    final snapshot = await ref.get();
     if (snapshot.exists) {
       // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, "home");

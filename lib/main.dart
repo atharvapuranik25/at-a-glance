@@ -1,4 +1,3 @@
-import 'package:at_a_glance/chat_screen.dart';
 import 'package:at_a_glance/google_sign_in.dart';
 import 'package:at_a_glance/user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
