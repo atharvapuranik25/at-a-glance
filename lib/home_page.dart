@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:at_a_glance/chat_screen.dart';
 import 'package:at_a_glance/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-
+import 'package:intl/intl.dart';
 import 'add_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,6 +22,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 1;
+  DateTime now = DateTime.now();
+  late int hours;
+
   late Position _currentPosition;
   late String _currentAddress = 'Getting Address';
   String? _currentCity;
@@ -37,6 +41,13 @@ class _HomePageState extends State<HomePage> {
   late String serviceAddress;
   late String servicePhone;
   late String serviceImage;
+
+  late String diesel;
+  late String petrol;
+  late String tempType;
+  late String temp;
+  late String windSpeed;
+  late String windType;
 
   FirebaseDatabase database = FirebaseDatabase.instance;
 
@@ -100,6 +111,7 @@ class _HomePageState extends State<HomePage> {
       final data = event.snapshot.value;
       setState(() {
         name = data.toString();
+        hours = now.hour;
       });
     });
     DatabaseReference phnoref =
@@ -134,8 +146,8 @@ class _HomePageState extends State<HomePage> {
         serviceType = data.toString();
       });
     });
-    DatabaseReference servicenameref = FirebaseDatabase.instance
-        .ref("services/$serviceType/${user.uid}/name");
+    DatabaseReference servicenameref =
+        FirebaseDatabase.instance.ref("services/$serviceType/${user.uid}/name");
     servicenameref.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
       setState(() {
@@ -164,6 +176,54 @@ class _HomePageState extends State<HomePage> {
       final data = event.snapshot.value;
       setState(() {
         serviceImage = data.toString();
+      });
+    });
+    DatabaseReference petrolref =
+        FirebaseDatabase.instance.ref("city_data/Ujjain/petrol");
+    petrolref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        petrol = data.toString();
+      });
+    });
+    DatabaseReference dieselref =
+        FirebaseDatabase.instance.ref("city_data/Ujjain/diesel");
+    dieselref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        diesel = data.toString();
+      });
+    });
+    DatabaseReference tempref =
+        FirebaseDatabase.instance.ref("city_data/Ujjain/temperature");
+    tempref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        temp = data.toString();
+      });
+    });
+    DatabaseReference temptyperef =
+        FirebaseDatabase.instance.ref("city_data/Ujjain/temp_type");
+    temptyperef.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        tempType = data.toString();
+      });
+    });
+    DatabaseReference windref =
+        FirebaseDatabase.instance.ref("city_data/Ujjain/wind_speed");
+    windref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        windSpeed = data.toString();
+      });
+    });
+    DatabaseReference windtyperef =
+        FirebaseDatabase.instance.ref("city_data/Ujjain/wind_type");
+    windtyperef.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        windType = data.toString();
       });
     });
 
@@ -219,12 +279,17 @@ class _HomePageState extends State<HomePage> {
               ),
         actions: <Widget>[
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ChatScreen()),
+              );
+            },
             icon: const Icon(
               Icons.chat_rounded,
               color: Colors.black,
             ),
-          )
+          ),
         ],
       ),
       body: SafeArea(
@@ -253,28 +318,68 @@ class _HomePageState extends State<HomePage> {
                               flex: 1,
                               fit: FlexFit.loose,
                               child: Container(
-                                padding: const EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(10),
                                 decoration: const BoxDecoration(
                                   color: Color(0xFF252525),
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(14),
                                   ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Flexible(
-                              flex: 1,
-                              fit: FlexFit.loose,
-                              child: Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFF2196f3),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(14),
-                                  ),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            "Petrol",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            '$petrol/L',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w200,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Expanded(
+                                      child: Divider(
+                                        color: Colors.white38,
+                                        thickness: 3,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          const Text(
+                                            "Diesel",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            '$diesel/L',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w200,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -285,7 +390,113 @@ class _HomePageState extends State<HomePage> {
                               flex: 1,
                               fit: FlexFit.loose,
                               child: Container(
-                                padding: const EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(10),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF2196f3),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(14),
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  hours >= 4 && hours < 18
+                                                      ? const Icon(
+                                                          Icons.sunny,
+                                                          size: 20,
+                                                          color: Colors.yellow,
+                                                        )
+                                                      : const Icon(
+                                                          Icons.dark_mode,
+                                                          size: 20,
+                                                          color: Colors.white,
+                                                        ),
+                                                  Text(
+                                                    '$temp°C',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            tempType,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w200,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Expanded(
+                                      child: Divider(
+                                        color: Colors.white38,
+                                        thickness: 3,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              const Icon(
+                                                Icons.wind_power,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                              Text(
+                                                '${windSpeed}Km/h',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            windType,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w200,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Flexible(
+                              flex: 1,
+                              fit: FlexFit.loose,
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
                                 decoration: const BoxDecoration(
                                   color: Color(0xFFffa800),
                                   borderRadius: BorderRadius.all(
@@ -305,7 +516,7 @@ class _HomePageState extends State<HomePage> {
                       flex: 5,
                       fit: FlexFit.loose,
                       child: Container(
-                        padding: const EdgeInsets.all(14),
+                        padding: const EdgeInsets.all(10),
                         decoration: const BoxDecoration(
                           color: Color(0xFFf1f1f1),
                           borderRadius: BorderRadius.all(

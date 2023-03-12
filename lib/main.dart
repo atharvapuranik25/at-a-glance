@@ -1,3 +1,4 @@
+import 'package:at_a_glance/chat_screen.dart';
 import 'package:at_a_glance/google_sign_in.dart';
 import 'package:at_a_glance/user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,10 +10,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'splash_screen.dart';
 import 'login_page.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // await dotenv.load(fileName: ".env");
 
   runApp(const MyApp());
 }
