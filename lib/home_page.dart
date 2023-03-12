@@ -10,7 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'add_service.dart'; // All included
+import 'add_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,16 +24,21 @@ class _HomePageState extends State<HomePage> {
   late Position _currentPosition;
   late String _currentAddress = 'Getting Address';
   String? _currentCity;
+
   late String name;
   late String phone;
   late String image;
   double lattitude = 0;
   double longitude = 0;
   late String service = 'false';
+  late String serviceType;
+
+  late String serviceName;
+  late String serviceAddress;
+  late String servicePhone;
+  late String serviceImage;
 
   FirebaseDatabase database = FirebaseDatabase.instance;
-
-  ValueNotifier<GeoPoint?> notifier = ValueNotifier(null);
 
   @override
   void initState() {
@@ -119,6 +124,46 @@ class _HomePageState extends State<HomePage> {
       final data = event.snapshot.value;
       setState(() {
         service = data.toString();
+      });
+    });
+    DatabaseReference servicetyperef =
+        FirebaseDatabase.instance.ref("users/${user.uid}/serice_type");
+    servicetyperef.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        serviceType = data.toString();
+      });
+    });
+    DatabaseReference servicenameref = FirebaseDatabase.instance
+        .ref("services/$serviceType/${user.uid}/name");
+    servicenameref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        serviceName = data.toString();
+      });
+    });
+    DatabaseReference servicepnoref = FirebaseDatabase.instance
+        .ref("services/$serviceType/${user.uid}/phone");
+    servicepnoref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        servicePhone = data.toString();
+      });
+    });
+    DatabaseReference serviceaddressref = FirebaseDatabase.instance
+        .ref("services/$serviceType/${user.uid}/address");
+    serviceaddressref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        serviceAddress = data.toString();
+      });
+    });
+    DatabaseReference serviceimgref = FirebaseDatabase.instance
+        .ref("services/$serviceType/${user.uid}/image");
+    serviceimgref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        serviceImage = data.toString();
       });
     });
 
@@ -383,22 +428,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
-                                    Text("User Profile"),
-                                    Text("Edit or view your data"),
-                                  ],
-                                ),
-                                const Icon(
-                                  Icons.edit,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
+                            const Text("User Profile"),
                             const SizedBox(
                               height: 20,
                             ),
@@ -428,54 +458,14 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       Text(user.email!),
                                       Text(phone),
+                                      Text(_currentAddress),
                                     ],
                                   ),
                                 ],
                               ),
                             ),
                             const SizedBox(
-                              height: 20,
-                            ),
-                            Text('Current Location: $_currentAddress'),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            ValueListenableBuilder<GeoPoint?>(
-                              valueListenable: notifier,
-                              builder: (ctx, p, child) {
-                                return Center(
-                                  child: Text(
-                                    "${p?.toString() ?? ""}",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                );
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blueGrey,
-                              ),
-                              onPressed: () async {
-                                var p = await showSimplePickerLocation(
-                                  context: context,
-                                  isDismissible: true,
-                                  title: "Pick Location",
-                                  textConfirmPicker: "Pick",
-                                  initCurrentUserPosition: true,
-                                  initZoom: 16,
-                                  radius: 8.0,
-                                );
-                                if (p != null) {
-                                  notifier.value = p;
-                                }
-                              },
-                              child: const Text("Pick Custom Location"),
-                            ),
-                            const SizedBox(
-                              height: 20,
+                              height: 50,
                             ),
                             service == 'false'
                                 ? ElevatedButton(
@@ -493,7 +483,46 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: const Text("+ Add Service"),
                                   )
-                                : Container(), //show service
+                                : Column(
+                                    children: [
+                                      const Text("Service Profile"),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Container(
+                                        //show service
+                                        padding: const EdgeInsets.all(15),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.orangeAccent,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(100),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 50,
+                                              backgroundImage:
+                                                  NetworkImage(serviceImage),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(serviceName),
+                                                Text(serviceType),
+                                                Text(serviceAddress),
+                                                Text(servicePhone),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                             const SizedBox(
                               height: 20,
                             ),
