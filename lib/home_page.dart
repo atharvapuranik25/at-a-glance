@@ -10,6 +10,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'add_service.dart'; // All included
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -27,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   late String image;
   double lattitude = 0;
   double longitude = 0;
+  late String service = 'false';
 
   FirebaseDatabase database = FirebaseDatabase.instance;
 
@@ -108,6 +111,14 @@ class _HomePageState extends State<HomePage> {
       final data = event.snapshot.value;
       setState(() {
         image = data.toString();
+      });
+    });
+    DatabaseReference serviceref =
+        FirebaseDatabase.instance.ref("users/${user.uid}/service");
+    serviceref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        service = data.toString();
       });
     });
 
@@ -466,13 +477,23 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(
                               height: 20,
                             ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey,
-                              ),
-                              onPressed: () {},
-                              child: const Text("+ Add Service"),
-                            ),
+                            service == 'false'
+                                ? ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.grey,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const AddService()),
+                                      );
+                                      const AddService();
+                                    },
+                                    child: const Text("+ Add Service"),
+                                  )
+                                : Container(), //show service
                             const SizedBox(
                               height: 20,
                             ),

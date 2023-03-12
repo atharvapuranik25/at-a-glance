@@ -47,7 +47,9 @@ class _UserDataState extends State<UserData> {
           "name": nameController.text.trim(),
           "email": user.email,
           "phone": phnoController.text.trim(),
-          "image": imageURL
+          "image": imageURL,
+          "service": false,
+          "service_type": null
         }
       });
     } catch (e) {
