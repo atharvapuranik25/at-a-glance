@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:at_a_glance/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -17,13 +20,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 1;
   late Position _currentPosition;
-  String? _currentAddress;
+  late String _currentAddress = 'Getting Address';
   String? _currentCity;
   late String name;
   late String phone;
   late String image;
+  double lattitude = 0;
+  double longitude = 0;
 
   FirebaseDatabase database = FirebaseDatabase.instance;
+
+  ValueNotifier<GeoPoint?> notifier = ValueNotifier(null);
 
   @override
   void initState() {
@@ -53,6 +60,12 @@ class _HomePageState extends State<HomePage> {
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+
+    setState(() {
+      longitude = position.longitude;
+      lattitude = position.latitude;
+    });
+
     try {
       List<Placemark> placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
@@ -412,9 +425,50 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(
                               height: 20,
                             ),
+                            Text('Current Location: $_currentAddress'),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            ValueListenableBuilder<GeoPoint?>(
+                              valueListenable: notifier,
+                              builder: (ctx, p, child) {
+                                return Center(
+                                  child: Text(
+                                    "${p?.toString() ?? ""}",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blueGrey,
+                              ),
+                              onPressed: () async {
+                                var p = await showSimplePickerLocation(
+                                  context: context,
+                                  isDismissible: true,
+                                  title: "Pick Location",
+                                  textConfirmPicker: "Pick",
+                                  initCurrentUserPosition: true,
+                                  initZoom: 16,
+                                  radius: 8.0,
+                                );
+                                if (p != null) {
+                                  notifier.value = p;
+                                }
+                              },
+                              child: const Text("Pick Custom Location"),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey,
                               ),
                               onPressed: () {},
                               child: const Text("+ Add Service"),
