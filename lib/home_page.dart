@@ -47,22 +47,20 @@ class _HomePageState extends State<HomePage> {
   late String temp;
   late String windSpeed;
   late String windType;
+  late String aqi;
+  late String aqiType;
 
   FirebaseDatabase database = FirebaseDatabase.instance;
 
-  Query elecRef =
-      FirebaseDatabase.instance.ref().child('services').child('Electrician');
-  Query plumbRef =
-      FirebaseDatabase.instance.ref().child('services').child('Plumber');
-  Query mechRef =
-      FirebaseDatabase.instance.ref().child('services').child('Mechanic');
+  Query serviceRef = FirebaseDatabase.instance.ref().child('services');
 
-  DatabaseReference electricianref =
-      FirebaseDatabase.instance.ref().child('services').child('Electrician');
-  DatabaseReference plumberref =
-      FirebaseDatabase.instance.ref().child('services').child('Plumber');
-  DatabaseReference mechanicref =
-      FirebaseDatabase.instance.ref().child('services').child('Mechanic');
+  DatabaseReference serviceprovref =
+      FirebaseDatabase.instance.ref().child('services');
+
+  Query newsRef =
+      FirebaseDatabase.instance.ref().child('city_news').child('Ujjain');
+  DatabaseReference newRef =
+      FirebaseDatabase.instance.ref().child('city_news').child('Ujjain');
 
   Widget listItem({required Map service}) {
     return Padding(
@@ -88,11 +86,67 @@ class _HomePageState extends State<HomePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(service['name']),
-                Text(service['address']),
-                Text(service['phone']),
-                const Text("5km away"),
+                Text(
+                  service['name'],
+                  overflow: TextOverflow.visible,
+                ),
+                Text(
+                  service['service_type'],
+                  overflow: TextOverflow.visible,
+                ),
+                Text(
+                  service['address'],
+                  overflow: TextOverflow.visible,
+                ),
+                Text(
+                  service['phone'],
+                  overflow: TextOverflow.visible,
+                ),
+                const Text(
+                  "5km away",
+                  overflow: TextOverflow.visible,
+                ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget newsItem({required Map article}) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        //show service
+        padding: const EdgeInsets.all(15),
+        decoration: const BoxDecoration(
+          color: Colors.black54,
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 60,
+              backgroundImage: NetworkImage(article['image']),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Flexible(
+              child: Container(
+                child: Text(
+                  article['headline'],
+                  overflow: TextOverflow.visible,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -196,31 +250,31 @@ class _HomePageState extends State<HomePage> {
       });
     });
     DatabaseReference servicenameref =
-        FirebaseDatabase.instance.ref("services/$serviceType/${user.uid}/name");
+        FirebaseDatabase.instance.ref("services/${user.uid}/name");
     servicenameref.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
       setState(() {
         serviceName = data.toString();
       });
     });
-    DatabaseReference servicepnoref = FirebaseDatabase.instance
-        .ref("services/$serviceType/${user.uid}/phone");
+    DatabaseReference servicepnoref =
+        FirebaseDatabase.instance.ref("services/${user.uid}/phone");
     servicepnoref.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
       setState(() {
         servicePhone = data.toString();
       });
     });
-    DatabaseReference serviceaddressref = FirebaseDatabase.instance
-        .ref("services/$serviceType/${user.uid}/address");
+    DatabaseReference serviceaddressref =
+        FirebaseDatabase.instance.ref("services/${user.uid}/address");
     serviceaddressref.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
       setState(() {
         serviceAddress = data.toString();
       });
     });
-    DatabaseReference serviceimgref = FirebaseDatabase.instance
-        .ref("services/$serviceType/${user.uid}/image");
+    DatabaseReference serviceimgref =
+        FirebaseDatabase.instance.ref("services/${user.uid}/image");
     serviceimgref.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
       setState(() {
@@ -273,6 +327,22 @@ class _HomePageState extends State<HomePage> {
       final data = event.snapshot.value;
       setState(() {
         windType = data.toString();
+      });
+    });
+    DatabaseReference aqiref =
+        FirebaseDatabase.instance.ref("city_data/Ujjain/aqi");
+    aqiref.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        aqi = data.toString();
+      });
+    });
+    DatabaseReference aqityperef =
+        FirebaseDatabase.instance.ref("city_data/Ujjain/aqi_type");
+    aqityperef.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      setState(() {
+        aqiType = data.toString();
       });
     });
 
@@ -552,6 +622,71 @@ class _HomePageState extends State<HomePage> {
                                     Radius.circular(14),
                                   ),
                                 ),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: const [
+                                                  Icon(
+                                                    Icons.air,
+                                                    size: 20,
+                                                    color: Colors.yellow,
+                                                  ),
+                                                  Text(
+                                                    'AQI',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            aqi,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w200,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Expanded(
+                                      child: Divider(
+                                        color: Colors.white38,
+                                        thickness: 3,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            aqiType,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -573,15 +708,15 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         child: FirebaseAnimatedList(
-                          query: mechRef,
+                          query: newsRef,
                           itemBuilder: (BuildContext context,
                               DataSnapshot snapshot,
                               Animation<double> animation,
                               int index) {
-                            Map mechanic = snapshot.value as Map;
-                            mechanic['key'] = snapshot.key;
+                            Map article = snapshot.value as Map;
+                            article['key'] = snapshot.key;
 
-                            return listItem(service: mechanic);
+                            return newsItem(article: article);
                           },
                         ),
                       ),
@@ -596,13 +731,13 @@ class _HomePageState extends State<HomePage> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 child: FirebaseAnimatedList(
-                  query: elecRef,
+                  query: serviceRef,
                   itemBuilder: (BuildContext context, DataSnapshot snapshot,
                       Animation<double> animation, int index) {
-                    Map electrician = snapshot.value as Map;
-                    electrician['key'] = snapshot.key;
+                    Map service_provider = snapshot.value as Map;
+                    service_provider['key'] = snapshot.key;
 
-                    return listItem(service: electrician);
+                    return listItem(service: service_provider);
                   },
                 ),
 
@@ -703,7 +838,13 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text("User Profile"),
+                            const Text(
+                              "User Profile",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             const SizedBox(
                               height: 20,
                             ),
@@ -730,10 +871,20 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       Text(
                                         name,
+                                        overflow: TextOverflow.visible,
                                       ),
-                                      Text(user.email!),
-                                      Text(phone),
-                                      Text(_currentAddress),
+                                      Text(
+                                        user.email!,
+                                        overflow: TextOverflow.visible,
+                                      ),
+                                      Text(
+                                        phone,
+                                        overflow: TextOverflow.visible,
+                                      ),
+                                      Text(
+                                        _currentAddress,
+                                        overflow: TextOverflow.visible,
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -760,7 +911,13 @@ class _HomePageState extends State<HomePage> {
                                   )
                                 : Column(
                                     children: [
-                                      const Text("Service Profile"),
+                                      const Text(
+                                        "Service Profile",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       const SizedBox(
                                         height: 20,
                                       ),
@@ -768,7 +925,7 @@ class _HomePageState extends State<HomePage> {
                                         //show service
                                         padding: const EdgeInsets.all(15),
                                         decoration: const BoxDecoration(
-                                          color: Colors.orangeAccent,
+                                          color: Color(0xFF252525),
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(100),
                                           ),
@@ -787,10 +944,38 @@ class _HomePageState extends State<HomePage> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text(serviceName),
-                                                Text(serviceType),
-                                                Text(serviceAddress),
-                                                Text(servicePhone),
+                                                Text(
+                                                  serviceName,
+                                                  overflow:
+                                                      TextOverflow.visible,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  serviceType,
+                                                  overflow:
+                                                      TextOverflow.visible,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  serviceAddress,
+                                                  overflow:
+                                                      TextOverflow.visible,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  servicePhone,
+                                                  overflow:
+                                                      TextOverflow.visible,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ],

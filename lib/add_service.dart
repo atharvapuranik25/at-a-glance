@@ -49,7 +49,7 @@ class _AddServiceState extends State<AddService> {
 
   Future addUserService() async {
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref("services/$dropdownValue/${user.uid}");
+        FirebaseDatabase.instance.ref("services/${user.uid}");
     DatabaseReference userref = FirebaseDatabase.instance.ref("users");
 
     if (imageURL.isEmpty) {
@@ -66,6 +66,7 @@ class _AddServiceState extends State<AddService> {
         "lattitude": lattitude,
         "longitude": longitude,
         "image": imageURL,
+        "service_type": dropdownValue
       });
       await userref.update({"${user.uid}/service": true});
       await userref.update({"${user.uid}/serice_type": dropdownValue});
