@@ -36,8 +36,6 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  // Link for api - https://beta.openai.com/account/api-keys
-
   void _sendMessage() async {
     if (_controller.text.isEmpty) return;
     ChatMessage message = ChatMessage(

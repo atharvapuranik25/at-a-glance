@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                   service['phone'],
                   overflow: TextOverflow.visible,
                 ),
-                const Text("2.3km Away"),
+                // const Text("2.3km Away"),
                 // FutureBuilder(
                 //   builder: (context, service) {
                 //     return const Center(
