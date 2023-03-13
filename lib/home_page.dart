@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:at_a_glance/chat_screen.dart';
 import 'package:at_a_glance/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,27 +29,27 @@ class _HomePageState extends State<HomePage> {
   late String _currentAddress = 'Getting Address';
   String? _currentCity;
 
-  late String name;
-  late String phone;
+  late String name = 'Getting Name';
+  late String phone = 'Getting Number';
   late String image;
   double lattitude = 0;
   double longitude = 0;
   late String service = 'false';
-  late String serviceType;
+  late String serviceType = 'Getting Service Type';
 
-  late String serviceName;
-  late String serviceAddress;
-  late String servicePhone;
+  late String serviceName = 'Getting Name';
+  late String serviceAddress = 'Getting Service Address';
+  late String servicePhone = 'Getting Number';
   late String serviceImage;
 
-  late String diesel;
-  late String petrol;
-  late String tempType;
-  late String temp;
-  late String windSpeed;
-  late String windType;
-  late String aqi;
-  late String aqiType;
+  late String diesel = '';
+  late String petrol = '';
+  late String tempType = '';
+  late String temp = '';
+  late String windSpeed = '';
+  late String windType = '';
+  late String aqi = '';
+  late String aqiType = '';
 
   FirebaseDatabase database = FirebaseDatabase.instance;
 
@@ -61,6 +62,24 @@ class _HomePageState extends State<HomePage> {
       FirebaseDatabase.instance.ref().child('city_news').child('Ujjain');
   DatabaseReference newRef =
       FirebaseDatabase.instance.ref().child('city_news').child('Ujjain');
+
+  Future<String> getDistance(
+      double lat1, double long1, double lat2, double long2) async {
+    double distanceEnMeters = await distance2point(
+      GeoPoint(
+        longitude: long1,
+        latitude: lat1,
+      ),
+      GeoPoint(
+        longitude: long2,
+        latitude: lat2,
+      ),
+    );
+    String distance;
+    distance = distanceEnMeters.toString();
+
+    return distance;
+  }
 
   Widget listItem({required Map service}) {
     return Padding(
@@ -102,10 +121,20 @@ class _HomePageState extends State<HomePage> {
                   service['phone'],
                   overflow: TextOverflow.visible,
                 ),
-                const Text(
-                  "5km away",
-                  overflow: TextOverflow.visible,
-                ),
+                const Text("2.3km Away"),
+                // FutureBuilder(
+                //   builder: (context, service) {
+                //     return const Center(
+                //       child: CircularProgressIndicator(),
+                //     );
+                //   },
+                //   future: getDistance(
+                //     lattitude,
+                //     longitude,
+                //     service['lattitude'],
+                //     service['longitude'],
+                //   ), //get back to this
+                // ),
               ],
             ),
           ],
@@ -734,10 +763,10 @@ class _HomePageState extends State<HomePage> {
                   query: serviceRef,
                   itemBuilder: (BuildContext context, DataSnapshot snapshot,
                       Animation<double> animation, int index) {
-                    Map service_provider = snapshot.value as Map;
-                    service_provider['key'] = snapshot.key;
+                    Map serviceProvider = snapshot.value as Map;
+                    serviceProvider['key'] = snapshot.key;
 
-                    return listItem(service: service_provider);
+                    return listItem(service: serviceProvider);
                   },
                 ),
 
