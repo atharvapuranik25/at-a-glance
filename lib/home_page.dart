@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 1;
   DateTime now = DateTime.now();
-  late int hours;
+  late int hours = 0;
 
   late Position _currentPosition;
   late String _currentAddress = 'Getting Address';
