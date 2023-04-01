@@ -1,16 +1,1 @@
-# at_a_glance
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[AU20B1005_Research_Paper_Advance_Technology.pdf](https://github.com/atharvapuranik25/at-a-glance/files/11129302/AU20B1005_Research_Paper_Advance_Technology.pdf)
